@@ -1,0 +1,10 @@
+# All build output stays in build/, like the reference web project (build/target is cargo's
+# target directory; build/dist holds the portable builds that build.bat publishes).
+[build]
+target-dir = "build/target"
+
+# The C runtime is linked into the executable. Without this the exe needs VCRUNTIME140.dll,
+# which belongs to the Visual C++ Redistributable and is not part of a clean Windows 11; with it
+# the exe only needs DLLs that ship with Windows, so a build folder can be copied to any machine.
+[target.x86_64-pc-windows-msvc]
+rustflags = ["-C", "target-feature=+crt-static"]

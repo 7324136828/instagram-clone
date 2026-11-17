@@ -1,0 +1,28 @@
+# Everything a build writes: cargo's target directory (build/target), the staging folder of a
+# build, the pictures of the smoke test, the stamp of setup.bat and the portable builds
+# (build/dist).
+build/
+# cargo's default target directory, in case the configuration in .cargo/config.toml is bypassed.
+target/
+
+# Temporary files of atomic writes and of downloads that were interrupted.
+*.tmp
+
+# Images written by failing snapshot tests.
+*.new.png
+*.diff.png
+
+# Rust: backups of rustfmt and debug information beside binaries that were copied around.
+**/*.rs.bk
+*.pdb
+
+# Local environment and editor files.
+.env
+.vscode/
+.idea/
+*.swp
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Cargo.lock IS tracked: the build uses it with --locked, and CI hashes it for its cache keys.

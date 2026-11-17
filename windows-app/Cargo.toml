@@ -1,0 +1,108 @@
+# Workspace of the native Windows image viewer. It mirrors the backend / frontend split of the
+# reference web project: `core` holds the format, the files and the logic (no GUI dependency, unit
+# tested), `app` holds the eframe/egui user interface.
+#
+# All build output goes to build/target (see .cargo/config.toml), like the web project keeps its
+# build output in build/.
+
+[workspace]
+resolver = "2"
+members = ["core", "app"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+
+# One place for dependency versions and features. These are exactly the versions and feature sets
+# the toolchain spike proved on this machine (MSVC only: no cmake, nasm, clang or pkg-config), so a
+# member crate writes `name = { workspace = true }` and never a version of its own.
+[workspace.dependencies]
+instagram-core = { path = "core" }
+
+# Core.
+serde = { version = "1", features = ["derive"] }
+# preserve_order keeps the keys of a JSON object in file order: settings.json keeps the user's key
+# order and unknown keys, and post.json is written in the canonical field order.
+serde_json = { version = "1", features = ["preserve_order"] }
+log = "0.4"
+# Pure-Rust decoders only. AVIF and HEIC go through Windows Imaging Component (core/src/decode.rs).
+image = { version = "0.25.10", default-features = false, features = ["jpeg", "png", "webp", "gif", "bmp"] }
+# Stored and deflated entries through flate2 with the pure-Rust zlib-rs backend. The zip crate
+# WRITES the downloads only: opened archives are read by core/src/archive (the clone's readers).
+zip = { version = "9.5.1", default-features = false, features = ["deflate-flate2-zlib-rs"] }
+# Raw deflate of zip members and the gzip stream of a .tar.gz, with the same pure-Rust backend
+# the zip crate already uses (no C code).
+flate2 = { version = "1.1.11", default-features = false, features = ["zlib-rs"] }
+# The request heads of the browser pages' HTTP server (hyper's parser, pure Rust); the server
+# itself is std::net (core/src/web).
+httparse = "1.10.1"
+# 128-bit upload ids of the browser imports, as the clone's uuid4; already in the build
+# through the zip crate.
+getrandom = "0.3.4"
+# Imaging + Com: WIC decoding. Time: the local UTC offset for date labels and archive entry times.
+# StructuredStorage + Variant: the PROPVARIANT a WIC metadata query returns (the EXIF orientation).
+# Storage_FileSystem: the free space of the drive of the archive cache.
+windows = { version = "0.62.2", features = [
+    "Win32_Foundation",
+    "Win32_Graphics_Imaging",
+    "Win32_Storage_FileSystem",
+    "Win32_System_Com",
+    "Win32_System_Com_StructuredStorage",
+    "Win32_System_Time",
+    "Win32_System_Variant",
+] }
+# The `#[implement]` macro of the windows crate (the Media Engine's notify callback, app/src/video)
+# expands to `::windows_core::` paths, so the crate that uses it names windows-core itself. It is
+# the version the windows crate already brings along; nothing new is downloaded.
+windows-core = { version = "0.62.2" }
+
+# User interface (used by `app` only; nothing below is compiled for `cargo check -p instagram-core`).
+# wgpu_no_default_features + a direct wgpu dependency with dx12 only: glow does not work on a
+# machine without a GPU, DX12 with the software rasteriser exists on every Windows 10/11.
+eframe = { version = "0.37.0", default-features = false, features = [
+    "wgpu_no_default_features",
+    "default_fonts",
+    "system_fonts",
+    "accesskit",
+    "clipboard",
+    "persistence",
+] }
+egui = { version = "0.37.0", default-features = false }
+wgpu = { version = "30.0.1", default-features = false, features = ["std", "dx12", "wgsl"] }
+egui_extras = { version = "0.37.0", default-features = false, features = ["svg"] }
+egui_kittest = { version = "0.37.0", features = ["wgpu", "snapshot"] }
+rfd = { version = "0.18.0", default-features = false }
+# eframe keeps the window geometry as RON (window.ron); the app reads and corrects it with the
+# same crate and version eframe uses (already part of the build through eframe's persistence).
+ron = { version = "0.12.3", features = ["integer128"] }
+winresource = "0.1.34"
+
+# egui-wgpu 0.37.0 with one change: with predictable texture filtering its shader contains no
+# hardware texture sample, which the software rasteriser of a machine without a graphics card
+# (WARP) draws about four times faster. The app turns it on only for such an adapter. What was
+# changed and how to redo it on an upgrade: vendor/README.md.
+[patch.crates-io]
+egui-wgpu = { path = "vendor/egui-wgpu" }
+
+# Debug builds: our own crates stay quick to rebuild, but every dependency is optimised, because
+# decoding a picture with an unoptimised decoder takes several hundred milliseconds.
+[profile.dev]
+opt-level = 1
+
+[profile.dev.package."*"]
+opt-level = 2
+
+# Release: thin LTO and four codegen units keep the link step reasonable on a 2-core machine.
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 4
+strip = true
+
+# Size-optimised variant measured by the spike: cargo build --profile dist
+[profile.dist]
+inherits = "release"
+lto = "fat"
+codegen-units = 1
+strip = true

@@ -1,0 +1,34 @@
+[package]
+name = "instagram-core"
+description = "Format, files and logic of the Instagram-style image viewer: no GUI dependency."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[lib]
+name = "instagram_core"
+path = "src/lib.rs"
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+zip = { workspace = true }
+flate2 = { workspace = true }
+image = { workspace = true }
+log = { workspace = true }
+httparse = { workspace = true }
+getrandom = { workspace = true }
+
+# Windows Imaging Component (HEIC, AVIF and anything else the image crate cannot read), the
+# local time zone and the free space of the drive of the archive cache. Other platforms still
+# compile; those paths then report an error, UTC or "unknown". Media Foundation: the first frame
+# of a video as its poster (the source reader) and the test videos (the sink writer).
+# WinSock: the browser pages reset the connection of a client that stopped reading
+# (SO_LINGER, which std::net does not set) and see whether a request is on its way to a
+# connection (FIONREAD), and their tests connect from other loopback addresses (127.0.0.2, ...),
+# which std::net cannot do. System_IO: CancelIoEx ends the waiting read of a connection that
+# makes way for another one (a shutdown does not). System_Threading: the tests' folder helper
+# (src/test_folder.rs) asks whether the test process that left a folder still runs. Nothing new
+# is downloaded.
+[target.'cfg(windows)'.dependencies]
+windows = { workspace = true, features = ["Win32_Media_MediaFoundation", "Win32_Networking_WinSock", "Win32_System_IO", "Win32_System_Threading"] }

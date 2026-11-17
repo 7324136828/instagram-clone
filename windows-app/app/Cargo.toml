@@ -1,0 +1,68 @@
+[package]
+name = "instagram-windows-app"
+description = "A native Windows image viewer in the style of Instagram."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+build = "build.rs"
+
+# The user interface lives in a library so that the headless tests in tests/ can build the whole
+# App without a window; the binary only parses the command line and starts eframe.
+[lib]
+name = "instagram_windows_app"
+path = "src/lib.rs"
+
+[[bin]]
+name = "instagram-windows-app"
+path = "src/main.rs"
+
+[dependencies]
+instagram-core = { workspace = true }
+eframe = { workspace = true }
+egui = { workspace = true }
+# Named directly only to select the DX12 backend (see the workspace manifest).
+wgpu = { workspace = true }
+# The SVG rasteriser (resvg) behind the icons.
+egui_extras = { workspace = true }
+# Native Open / Save dialogs and the message box of a fatal settings error.
+rfd = { workspace = true }
+# PNG: the window icon, the icon generator (examples/make_icon.rs) and the screenshot harness.
+image = { workspace = true }
+log = { workspace = true }
+# window.ron: the stored window geometry is checked before eframe restores it (src/placement.rs).
+ron = { workspace = true }
+serde = { workspace = true }
+# The values the Browser view sheet writes into settings.json.
+serde_json = { workspace = true }
+
+# The Win32 calls of the interface (src/platform.rs): the priority of the decoder threads, the
+# console a windowed build borrows to print --help and --version, the work area and frame of a
+# window (Gdi, HiDpi, WindowsAndMessaging), and the double-click time and wheel lines of the
+# mouse settings (KeyboardAndMouse, WindowsAndMessaging). Video (src/video): the Media Engine of
+# Media Foundation, and Direct3D 11 + DXGI for the engine's frame server on a graphics card.
+[target.'cfg(windows)'.dependencies]
+windows = { workspace = true, features = [
+    "Win32_System_Console",
+    "Win32_System_Threading",
+    "Win32_Graphics_Gdi",
+    "Win32_UI_HiDpi",
+    "Win32_UI_Input_KeyboardAndMouse",
+    "Win32_UI_WindowsAndMessaging",
+    "Win32_Media_MediaFoundation",
+    "Win32_Graphics_Direct3D",
+    "Win32_Graphics_Direct3D11",
+    "Win32_Graphics_Dxgi",
+    "Win32_Graphics_Dxgi_Common",
+] }
+# `#[implement(IMFMediaEngineNotify)]` expands to `::windows_core::` paths (see the workspace).
+windows-core = { workspace = true }
+
+[dev-dependencies]
+egui_kittest = { workspace = true }
+# The tests open the archives a download wrote and look into their post.json.
+zip = { workspace = true }
+
+[build-dependencies]
+winresource = { workspace = true }
+# build.rs reads web/VENDORED.json to check the vendored browser pages before it embeds them.
+serde_json = { workspace = true }

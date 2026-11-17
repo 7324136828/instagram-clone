@@ -1,0 +1,21 @@
+{
+  "source": "instagram-clone/frontend",
+  "source_sha256": "cc543f6778e0cafd0c9a4c90b0d922dafc476775907ca8aaa1aa63a6edf254ea",
+  "built_at": "2026-11-17T03:44:53Z",
+  "node": "v26.13.0",
+  "npm": "12.2.1",
+  "vite": "6.4.3",
+  "files": [
+    {"path": "assets/heic-to-DRMWFppq.js", "bytes": 3225493, "sha256": "9d36332265642602e150baf61f67ef38488b3dbd1bf8fae24d220f111c4a1cf8"},
+    {"path": "assets/index-CJ0ZOLoL.css", "bytes": 106092, "sha256": "04f7fc14c89316eb2c29d4dd51b487a5186ba967e860784db2059e577805e4a2"},
+    {"path": "assets/index-CpR1LdjU.js", "bytes": 365045, "sha256": "35ce00b39545e899e8278c905ce4bf1a18e991d45b9ce217da17a507aabd1d9a"},
+    {"path": "index.html", "bytes": 1120, "sha256": "cb748653adbd9aa52008e28ee707752e16625176359dd1025fe86f3093d6dc6f"},
+    {"path": "licenses/GPL-3.0.txt", "bytes": 35149, "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986"},
+    {"path": "licenses/README.txt", "bytes": 1776, "sha256": "7dce024b2541ad63bf053c0596e09fa243c89841785a0139f2be44b2a0488b96"},
+    {"path": "licenses/fflate.LICENSE.txt", "bytes": 1069, "sha256": "0a1df3a083d0c010560aa342e87959c8c1070e6fd54545741f083f22d0c8b551"},
+    {"path": "licenses/heic-to.LICENSE.txt", "bytes": 8177, "sha256": "dbd7222d8026e5d6ca6991d1e6a205de927f300840433c2e90a60644a9980c75"},
+    {"path": "licenses/react-dom.LICENSE.txt", "bytes": 1086, "sha256": "52412d7bc7ce4157ea628bbaacb8829e0a9cb3c58f57f99176126bc8cf2bfc85"},
+    {"path": "licenses/react.LICENSE.txt", "bytes": 1086, "sha256": "52412d7bc7ce4157ea628bbaacb8829e0a9cb3c58f57f99176126bc8cf2bfc85"},
+    {"path": "licenses/scheduler.LICENSE.txt", "bytes": 1086, "sha256": "52412d7bc7ce4157ea628bbaacb8829e0a9cb3c58f57f99176126bc8cf2bfc85"}
+  ]
+}

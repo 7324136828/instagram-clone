@@ -1,0 +1,114 @@
+diff --git a/src/egui.wgsl b/src/egui.wgsl
+index 9567b0d..f81c209 100644
+--- a/src/egui.wgsl
++++ b/src/egui.wgsl
+@@ -200,3 +200,73 @@ fn fs_main_gamma_framebuffer(in: VertexOutput) -> @location(0) vec4<f32> {
+     }
+     return out_color_gamma;
+ }
++
++// -----------------------------------------------
++// instagram-windows-app patch (see vendor/README.md).
++//
++// The two entry points below replace the two above when the renderer filters textures in the
++// shader (`RendererOptions::predictable_texture_filtering`). They compute what the predictable
++// branch of `sample_texture` computes, but the shader contains no `textureSample` at all: on the
++// Microsoft Basic Render Driver (WARP, Direct3D 12 drawn by the processor) a fragment shader
++// that contains a hardware sample is about four times slower, even when the uniform says that
++// branch is never taken.
++
++/// `wrap_texel_coord` with the common clamp mode tested first.
++fn wrap_texel_coord_clamp_first(coord: vec2<i32>, texture_size: vec2<i32>) -> vec2<i32> {
++    if (r_tex_flags[0] >> 1u) == WRAP_MODE_CLAMP_TO_EDGE {
++        return clamp(coord, vec2<i32>(0, 0), texture_size - vec2<i32>(1, 1));
++    }
++    return wrap_texel_coord(coord, texture_size);
++}
++
++/// Nearest or bilinear filtering with `textureLoad` only (four taps at texel centres).
++fn sample_texture_in_shader(in: VertexOutput) -> vec4<f32> {
++    // Every flat-coloured shape has the texture coordinate (0, 0) (`epaint::WHITE_UV`). With
++    // clamping, every tap of both filters is texel (0, 0) there, so one load gives exactly the
++    // same colour, and most pixels of the window are such shapes.
++    if all(in.tex_coord == vec2<f32>(0.0, 0.0)) && (r_tex_flags[0] >> 1u) == WRAP_MODE_CLAMP_TO_EDGE {
++        return textureLoad(r_tex_color, vec2<i32>(0, 0), 0);
++    }
++
++    let texture_size = vec2<i32>(textureDimensions(r_tex_color, 0));
++    let texture_size_f = vec2<f32>(texture_size);
++
++    if (r_tex_flags[0] & TEX_FLAG_NEAREST) != 0u {
++        let texel = wrap_texel_coord_clamp_first(vec2<i32>(floor(in.tex_coord * texture_size_f)), texture_size);
++        return textureLoad(r_tex_color, texel, 0);
++    }
++
++    let pixel_coord = in.tex_coord * texture_size_f - 0.5;
++    let pixel_fract = fract(pixel_coord);
++    let pixel_floor = vec2<i32>(floor(pixel_coord));
++    let tl = textureLoad(r_tex_color, wrap_texel_coord_clamp_first(pixel_floor + vec2<i32>(0, 0), texture_size), 0);
++    let tr = textureLoad(r_tex_color, wrap_texel_coord_clamp_first(pixel_floor + vec2<i32>(1, 0), texture_size), 0);
++    let bl = textureLoad(r_tex_color, wrap_texel_coord_clamp_first(pixel_floor + vec2<i32>(0, 1), texture_size), 0);
++    let br = textureLoad(r_tex_color, wrap_texel_coord_clamp_first(pixel_floor + vec2<i32>(1, 1), texture_size), 0);
++    let top = mix(tl, tr, pixel_fract.x);
++    let bottom = mix(bl, br, pixel_fract.x);
++    return mix(top, bottom, pixel_fract.y);
++}
++
++@fragment
++fn fs_main_linear_framebuffer_in_shader(in: VertexOutput) -> @location(0) vec4<f32> {
++    let tex_gamma = sample_texture_in_shader(in);
++    var out_color_gamma = in.color * tex_gamma;
++    if r_locals.dithering == 1 {
++        let out_color_gamma_rgb = dither_interleaved(out_color_gamma.rgb, 256.0, in.position);
++        out_color_gamma = vec4<f32>(out_color_gamma_rgb, out_color_gamma.a);
++    }
++    let out_color_linear = linear_from_gamma_rgb(out_color_gamma.rgb);
++    return vec4<f32>(out_color_linear, out_color_gamma.a);
++}
++
++@fragment
++fn fs_main_gamma_framebuffer_in_shader(in: VertexOutput) -> @location(0) vec4<f32> {
++    let tex_gamma = sample_texture_in_shader(in);
++    var out_color_gamma = in.color * tex_gamma;
++    if r_locals.dithering == 1 {
++        let out_color_gamma_rgb = dither_interleaved(out_color_gamma.rgb, 256.0, in.position);
++        out_color_gamma = vec4<f32>(out_color_gamma_rgb, out_color_gamma.a);
++    }
++    return out_color_gamma;
++}
+diff --git a/src/renderer.rs b/src/renderer.rs
+index 382d874..1daa97b 100644
+--- a/src/renderer.rs
++++ b/src/renderer.rs
+@@ -207,6 +207,10 @@ pub struct RendererOptions {
+     /// Default is `false`.
+     ///
+     /// See also <https://github.com/emilk/egui/issues/5295>.
++    ///
++    /// instagram-windows-app patch (see vendor/README.md): when this is set, the pipeline uses
++    /// fragment entry points that contain no hardware sample at all, which a software
++    /// rasteriser (WARP) draws about four times faster.
+     pub predictable_texture_filtering: bool,
+ }
+ 
+@@ -432,11 +436,15 @@ impl Renderer {
+ 
+                 fragment: Some(wgpu::FragmentState {
+                     module: &module,
+-                    entry_point: Some(if output_color_format.is_srgb() {
+-                        log::warn!("Detected a linear (sRGBA aware) framebuffer {output_color_format:?}. egui prefers Rgba8Unorm or Bgra8Unorm");
+-                        "fs_main_linear_framebuffer"
+-                    } else {
+-                        "fs_main_gamma_framebuffer" // this is what we prefer
++                    // instagram-windows-app patch (see vendor/README.md): filtering in the
++                    // shader uses entry points without a hardware sample.
++                    entry_point: Some(match (output_color_format.is_srgb(), options.predictable_texture_filtering) {
++                        (true, in_shader) => {
++                            log::warn!("Detected a linear (sRGBA aware) framebuffer {output_color_format:?}. egui prefers Rgba8Unorm or Bgra8Unorm");
++                            if in_shader { "fs_main_linear_framebuffer_in_shader" } else { "fs_main_linear_framebuffer" }
++                        }
++                        (false, true) => "fs_main_gamma_framebuffer_in_shader",
++                        (false, false) => "fs_main_gamma_framebuffer", // this is what we prefer
+                     }),
+                     targets: &[Some(wgpu::ColorTargetState {
+                         format: output_color_format,

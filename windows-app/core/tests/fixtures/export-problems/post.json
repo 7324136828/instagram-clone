@@ -1,0 +1,93 @@
+{
+  "format": "instagram-export",
+  "version": 1,
+  "exported_at": "2026-11-10T09:30:00Z",
+  "posts": [
+    {
+      "id": "FXTprob001",
+      "url": "https://www.instagram.com/p/FXTprob001/",
+      "image": "posts/problem1.jpg",
+      "user": {
+        "username": "problem.pelican.demo",
+        "full_name": "Problem Pelican Demo"
+      },
+      "caption": "The one valid post of this export ✅",
+      "comment_count": 12,
+      "like_count": 345,
+      "taken_at": "2026-11-02T08:00:00Z"
+    },
+    {
+      "id": "FXTprob002",
+      "url": "https://www.instagram.com/p/FXTprob002/",
+      "image": "posts/does-not-exist.jpg",
+      "user": {
+        "username": "problem.pelican.demo",
+        "full_name": "Problem Pelican Demo"
+      },
+      "caption": "My image is missing from the export.",
+      "comment_count": 1,
+      "like_count": 1
+    },
+    {
+      "id": "FXTprob003",
+      "url": "javascript:alert(document.domain)",
+      "image": "posts/problem3.jpg",
+      "user": {
+        "username": "problem.pelican.demo",
+        "full_name": "Problem Pelican Demo"
+      },
+      "caption": "My link is a javascript: URL.",
+      "comment_count": 2,
+      "like_count": 2
+    },
+    {
+      "id": "FXTprob004",
+      "url": "https://www.instagram.com.evil.example/p/FXTprob004/",
+      "image": "posts/problem4.png",
+      "user": {
+        "username": "problem.pelican.demo",
+        "full_name": "Problem Pelican Demo",
+        "profile_url": "https://instagram.com.evil.example/problem.pelican.demo/"
+      },
+      "caption": "My link and my profile link point at a look-alike host.",
+      "comment_count": 3,
+      "like_count": 3
+    },
+    {
+      "id": "FXTprob001",
+      "url": "https://www.instagram.com/p/FXTprob001/",
+      "image": "posts/problem5.jpg",
+      "user": {
+        "username": "problem.pelican.demo",
+        "full_name": "Problem Pelican Demo"
+      },
+      "caption": "I reuse the id of the first post.",
+      "comment_count": 4,
+      "like_count": 4
+    },
+    {
+      "id": "FXTprob006",
+      "url": "https://www.instagram.com/p/FXTprob006/",
+      "image": "posts/problem6.svg",
+      "user": {
+        "username": "problem.pelican.demo",
+        "full_name": "Problem Pelican Demo"
+      },
+      "caption": "My image is an SVG.",
+      "comment_count": 5,
+      "like_count": 5
+    },
+    {
+      "id": "FXTprob007",
+      "url": "https://www.instagram.com/p/FXTprob007/",
+      "image": "https://cdn.fixture.invalid/remote/problem7.jpg",
+      "user": {
+        "username": "problem.pelican.demo",
+        "full_name": "Problem Pelican Demo"
+      },
+      "caption": "My image path is a remote URL, which is never fetched.",
+      "comment_count": 6,
+      "like_count": 6
+    }
+  ]
+}

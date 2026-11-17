@@ -1,0 +1,52 @@
+[
+  {
+    "shortcode": "FXTlen001",
+    "permalink": "https://www.instagram.com/p/FXTlen001/",
+    "image_path": "Posts\\LENIENT1.JPG",
+    "from": "lenient.lighthouse.demo",
+    "description": "Alias field names all the way down 🗼\n#lenient",
+    "comments_count": "1,234",
+    "likes": "12.3K",
+    "timestamp": 1793361600,
+    "type": "image"
+  },
+  {
+    "code": "FXTlen002",
+    "link": "http://instagram.com/p/FXTlen002/",
+    "path": ".\\posts\\lenient2.png",
+    "owner": {
+      "name": "lenient.lighthouse.demo",
+      "fullName": "Lenient Lighthouse",
+      "is_verified": true,
+      "profile_pic": "Avatars\\Lighthouse.PNG",
+      "url": "https://www.instagram.com/lenient.lighthouse.demo/"
+    },
+    "first_comment": "The extension says PNG, the bytes say WebP.",
+    "total_comments": "2.5K",
+    "likes_count": "1.2M",
+    "date": "2026-10-29T10:00:00+02:00"
+  },
+  {
+    "id": "FXTlen003",
+    "post_url": "https://www.instagram.com/p/FXTlen003/",
+    "media_paths": [
+      "/posts/lenient3_1.jpeg",
+      "posts/lenient3_2.jpeg"
+    ],
+    "author": {
+      "handle": "lenient_gull_demo",
+      "display_name": "Lenient Gull"
+    },
+    "text": "Two slides listed under media_paths.",
+    "commentCount": "not a number",
+    "likeCount": -5,
+    "created_at": 1793275200000
+  },
+  {
+    "file": "posts/lenient4.jpg",
+    "username": "lenient_gull_demo",
+    "caption": "",
+    "comments_total": 5,
+    "like_count": "987"
+  }
+]

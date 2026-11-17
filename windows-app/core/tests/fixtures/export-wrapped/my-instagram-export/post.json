@@ -1,0 +1,131 @@
+{
+  "format": "instagram-export",
+  "version": 1,
+  "exported_at": "2026-11-10T09:30:00Z",
+  "source": {
+    "type": "profile",
+    "url": "https://www.instagram.com/fixture.sunrise.bakery/"
+  },
+  "posts": [
+    {
+      "id": "FXTbasic001",
+      "url": "https://www.instagram.com/p/FXTbasic001/",
+      "image": "posts/post1.jpg",
+      "user": {
+        "username": "fixture.sunrise.bakery",
+        "full_name": "Sunrise Bakery (test fixture)",
+        "verified": true,
+        "avatar": "avatars/fixture.sunrise.bakery.jpg",
+        "profile_url": "https://www.instagram.com/fixture.sunrise.bakery/"
+      },
+      "caption": "Fresh out of the oven 🥐☀️\nFirst batch of the season, baked together with @fixture_tidewater.\n\nCome early, the cinnamon knots never last past nine.\n#sourdough #fixturedata #朝ごはん",
+      "comment_count": 1234,
+      "like_count": 56789,
+      "taken_at": "2026-11-01T15:04:05Z",
+      "media_type": "image",
+      "alt": "Orange test card labelled POST 1",
+      "location": "Fixtureville, Testland",
+      "comments": [
+        {
+          "username": "fixture_tidewater",
+          "text": "Saving me two of those 🙌",
+          "like_count": 3,
+          "taken_at": "2026-11-01T16:00:00Z"
+        },
+        {
+          "username": "pixel.orchard.demo",
+          "text": "The crumb on that loaf! #goals",
+          "like_count": 0,
+          "taken_at": "2026-11-01T17:30:00Z"
+        }
+      ]
+    },
+    {
+      "id": "FXTbasic002",
+      "url": "https://www.instagram.com/p/FXTbasic002/",
+      "image": "posts/post2.png",
+      "user": {
+        "username": "fixture_tidewater",
+        "full_name": "Tidewater Test Account",
+        "verified": false,
+        "avatar": "avatars/fixture_tidewater.jpg",
+        "profile_url": "https://www.instagram.com/fixture_tidewater/"
+      },
+      "caption": "潮が引いたあとの静かな海 🌊\nВечерний отлив и тишина.\nمساء هادئ على الشاطئ\n#tidepool #lowtide",
+      "comment_count": 42,
+      "like_count": null,
+      "taken_at": "2026-10-28T07:15:00Z",
+      "media_type": "image",
+      "alt": "Blue portrait test card labelled POST 2"
+    },
+    {
+      "id": "FXTbasic003",
+      "url": "https://www.instagram.com/p/FXTbasic003/",
+      "image": "posts/post3.webp",
+      "user": {
+        "username": "fixture.sunrise.bakery",
+        "full_name": "Sunrise Bakery (test fixture)",
+        "verified": true,
+        "avatar": "avatars/fixture.sunrise.bakery.jpg",
+        "profile_url": "https://www.instagram.com/fixture.sunrise.bakery/"
+      },
+      "caption": "Quiet morning in the green room 🌿",
+      "comment_count": 0,
+      "like_count": 987,
+      "taken_at": "2026-10-20T06:00:00Z",
+      "media_type": "image"
+    },
+    {
+      "id": "FXTbasic004",
+      "url": "https://www.instagram.com/p/FXTbasic004/",
+      "image": "posts/post4.heic",
+      "user": {
+        "username": "pixel.orchard.demo",
+        "full_name": "Pixel Orchard Demo",
+        "profile_url": "https://www.instagram.com/pixel.orchard.demo/"
+      },
+      "caption": "Straight off the phone as HEIC 📱🍎\n#heic #shotonfixture",
+      "comment_count": 7,
+      "like_count": 321,
+      "taken_at": "2026-10-12T18:45:00Z",
+      "media_type": "image",
+      "alt": "Purple test card labelled POST 4 HEIC"
+    },
+    {
+      "id": "FXTbasic005",
+      "url": "https://www.instagram.com/p/FXTbasic005/",
+      "image": "posts/post5_1.jpg",
+      "images": [
+        "posts/post5_1.jpg",
+        "posts/post5_2.jpg"
+      ],
+      "user": {
+        "username": "fixture_tidewater",
+        "full_name": "Tidewater Test Account",
+        "verified": false,
+        "avatar": "avatars/fixture_tidewater.jpg",
+        "profile_url": "https://www.instagram.com/fixture_tidewater/"
+      },
+      "caption": "Two tides, one afternoon ↔️ swipe for the second one\n#carousel #fixturedata",
+      "comment_count": 18,
+      "like_count": 2500,
+      "taken_at": "2026-10-05T12:00:00Z",
+      "media_type": "carousel"
+    },
+    {
+      "id": "FXTbasic006",
+      "url": "https://www.instagram.com/reel/FXTbasic006/",
+      "image": "posts/post6.jpg",
+      "user": {
+        "username": "pixel.orchard.demo",
+        "full_name": "Pixel Orchard Demo",
+        "profile_url": "https://www.instagram.com/pixel.orchard.demo/"
+      },
+      "caption": "Timelapse of the orchard at dusk 🎬 (the export keeps the cover image only)",
+      "comment_count": 3,
+      "like_count": 45678,
+      "taken_at": "2026-09-30T20:10:00Z",
+      "media_type": "video"
+    }
+  ]
+}

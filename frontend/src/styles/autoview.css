@@ -1,0 +1,110 @@
+/* Auto view: the setup dialog (themed like the action sheet) and the full-screen player (always dark,
+   like the story viewer, so it reads the same in the light and the dark theme). */
+
+.av-setup { width: 420px; }
+.av-setup__body { display: flex; flex-direction: column; gap: 14px; padding: 20px 20px 18px; text-align: left; }
+.av-setup__title { font-size: 18px; font-weight: 600; text-align: center; }
+.av-setup__lead { color: var(--ig-muted); font-size: 14px; line-height: 1.4; text-align: center; }
+.av-setup__field { display: flex; flex-direction: column; gap: 8px; }
+.av-setup__label { font-size: 14px; font-weight: 600; }
+.av-setup__seconds { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--ig-muted); }
+.av-setup__seconds input {
+  width: 8em; padding: 8px 10px; border: 1px solid var(--ig-border); border-radius: 8px;
+  background: var(--ig-input); color: var(--ig-text); font-size: 16px; font-variant-numeric: tabular-nums;
+}
+.av-setup__seconds input:focus-visible { outline: 2px solid var(--ig-blue); outline-offset: 1px; }
+.av-setup__seconds input[aria-invalid='true'] { border-color: #ed4956; }
+.av-setup__presets { display: flex; flex-wrap: wrap; gap: 6px; }
+.av-setup__preset { min-height: 32px; padding: 6px 12px; border-radius: 16px; background: var(--ig-soft); color: var(--ig-text); font-size: 13px; font-weight: 600; }
+.av-setup__preset:hover { background: var(--ig-soft-hover); }
+.av-setup__preset[aria-pressed='true'] { background: var(--ig-text); color: var(--ig-elevated); }
+/* In the dark theme --ig-soft is the colour of the sheet itself: the chips need the lighter shade. */
+.__fb-dark-mode .av-setup__preset:not([aria-pressed='true']) { background: var(--ig-soft-hover); }
+.__fb-dark-mode .av-setup__preset:not([aria-pressed='true']):hover { background: #4a4a4a; }
+.av-setup__hint { color: var(--ig-muted); font-size: 12px; line-height: 1.4; }
+.av-setup__error { color: #c22b38; font-size: 13px; line-height: 1.4; }
+.__fb-dark-mode .av-setup__error { color: #ff7a85; }
+.av-setup__check { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; line-height: 1.4; cursor: pointer; }
+.av-setup__check input { flex: none; width: 18px; height: 18px; margin: 1px 0 0; accent-color: var(--ig-blue); cursor: pointer; }
+.av-setup__sub { display: block; color: var(--ig-muted); font-size: 12px; }
+.av-setup .sheet__item:disabled { opacity: .45; cursor: default; }
+.av-setup .sheet__item:disabled:hover { background: none; }
+
+.av {
+  position: fixed; inset: 0; z-index: 100; display: flex; flex-direction: column;
+  background: #000; color: #fff; outline: none;
+}
+.av :focus-visible { outline: 2px solid #4cb5f9; outline-offset: 2px; }
+
+.av__progress { flex: none; height: 3px; overflow: hidden; background: rgba(255, 255, 255, .25); }
+.av__progress-bar { display: block; width: 100%; height: 100%; background: #fff; transform: scaleX(0); transform-origin: left center; }
+
+.av__top { display: flex; flex: none; align-items: center; gap: 10px; min-height: 56px; padding: 6px 8px 6px 16px; }
+.av__author { display: flex; flex: 1 1 auto; align-items: center; gap: 10px; min-width: 0; font-size: 14px; }
+.av__username { overflow: hidden; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.av__time { flex: none; color: rgba(255, 255, 255, .7); font-size: 13px; }
+.av__counter {
+  flex: none; padding: 4px 10px; border-radius: 14px; background: rgba(255, 255, 255, .14);
+  font-size: 13px; font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+
+.av__icon-btn { display: inline-flex; flex: none; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 50%; color: #fff; transition: background .15s ease; }
+.av__icon-btn:hover:not(:disabled) { background: rgba(255, 255, 255, .14); }
+.av__icon-btn:disabled { opacity: .35; cursor: default; }
+.av__play { width: 52px; height: 52px; background: #fff; color: #000; }
+.av__play:hover:not(:disabled) { background: #dbdbdb; }
+
+.av__stage { position: relative; display: flex; flex: 1 1 auto; min-height: 0; }
+.av__media { position: relative; display: flex; flex: 1 1 auto; min-width: 0; animation: av-in .3s ease; }
+.av__media > .media { flex: 1 1 auto; height: auto; }
+/* A video is as wide as its picture, so its controls sit under the picture, not across the screen. */
+.av .video__el--contain { left: 50%; right: auto; width: auto; max-width: 100%; transform: translateX(-50%); }
+.av__paused {
+  position: absolute; left: 50%; top: 50%; z-index: 3; padding: 8px 16px; transform: translate(-50%, -50%);
+  border-radius: 18px; background: rgba(18, 18, 18, .78); font-size: 14px; font-weight: 600; pointer-events: none;
+}
+
+.av__info { flex: none; width: 100%; max-width: 760px; margin: 0 auto; padding: 10px 16px 0; font-size: 14px; line-height: 1.4; }
+.av__caption { display: -webkit-box; overflow: hidden; overflow-wrap: anywhere; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.av__caption-user { font-weight: 600; }
+.av__meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 16px; margin-top: 6px; color: rgba(255, 255, 255, .75); font-size: 13px; }
+.av__link { display: inline-flex; align-items: center; gap: 4px; color: #fff; font-weight: 600; }
+.av__link:hover { text-decoration: underline; }
+
+.av__controls {
+  display: flex; flex: none; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 12px;
+  padding: 10px 16px max(14px, env(safe-area-inset-bottom));
+}
+.av__interval { display: inline-flex; align-items: center; gap: 2px; padding: 2px; border-radius: 22px; background: rgba(255, 255, 255, .14); }
+.av__step { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; color: #fff; font-size: 20px; line-height: 1; }
+.av__step:hover:not(:disabled) { background: rgba(255, 255, 255, .14); }
+.av__step:disabled { opacity: .35; cursor: default; }
+.av__interval-value { min-width: 5.5em; font-size: 13px; font-variant-numeric: tabular-nums; text-align: center; }
+
+.av__end { display: flex; flex: 1 1 auto; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 24px 16px; text-align: center; }
+.av__end-title { font-size: 22px; font-weight: 600; }
+.av__end-text { color: rgba(255, 255, 255, .75); font-size: 14px; }
+.av__end-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 6px; }
+.av__btn { min-height: 40px; padding: 8px 22px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+.av__btn--primary { background: var(--ig-blue); color: #fff; }
+.av__btn--primary:hover { background: var(--ig-blue-strong); }
+.av__btn--ghost { background: rgba(255, 255, 255, .16); color: #fff; }
+.av__btn--ghost:hover { background: rgba(255, 255, 255, .26); }
+
+@keyframes av-in { from { opacity: 0; } to { opacity: 1; } }
+
+@media (max-width: 480px) {
+  .av__top { min-height: 48px; padding: 4px 4px 4px 12px; gap: 8px; }
+  .av__info { padding: 8px 12px 0; font-size: 13px; }
+  .av__controls { gap: 6px; padding: 8px 8px max(10px, env(safe-area-inset-bottom)); }
+  .av__icon-btn { width: 40px; height: 40px; }
+  .av__play { width: 48px; height: 48px; }
+  .av__step { width: 36px; height: 36px; }
+  .av__interval-value { min-width: 5em; }
+  .av-setup__body { padding: 16px 16px 14px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .av__media { animation: none; }
+  .av .media__track, .av__icon-btn { transition: none; }
+}
