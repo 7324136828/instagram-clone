@@ -72,6 +72,9 @@ def setup_native_app() -> None:
     """Provision the native Windows app: toolchain check and cargo fetch."""
     if not (NATIVE_APP / "setup.ps1").is_file():
         return
+    if os.name != "nt":
+        print("[setup] Skipping the native Windows app in windows-app/: it builds on Windows only.")
+        return
     if find_cargo() is None:
         print(
             "[setup] Rust was not found: the native Windows app in windows-app\\ "
@@ -120,8 +123,11 @@ def main() -> int:
     setup_native_app()
     seed_environment_file()
 
-    print("\n[setup] Ready. Start the web stack with run.bat, or the native")
-    print("[setup] Windows app with run-app.bat.")
+    if os.name == "nt":
+        print("\n[setup] Ready. Start the web stack with run.bat, or the native")
+        print("[setup] Windows app with run-app.bat.")
+    else:
+        print("\n[setup] Ready. Start the web stack with ./run.sh")
     return 0
 
 

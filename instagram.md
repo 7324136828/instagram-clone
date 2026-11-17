@@ -2123,7 +2123,7 @@ The clone tolerates an archive that wraps everything in one top-level folder, bu
 
 ## 11 Importing into the clone
 
-1. Start the clone (see `README.md`: `run.bat`, or a portable build's `run.bat`) and open the `Frontend:` URL it prints: by default `http://localhost:5173` for `run.bat`, and `http://127.0.0.1:3127` for a portable build (its ports come from `settings.json`, see `README.md`, "Configuration").
+1. Start the clone (see `README.md`: `run.bat` on Windows, `./run.sh` elsewhere, or a portable build's `run.bat`) and open the `Frontend:` URL it prints: by default `http://localhost:5173` for `run.bat` / `./run.sh`, and `http://127.0.0.1:3127` for a portable build (its ports come from `settings.json`, see `README.md`, "Configuration").
 2. Click **Import** in the sidebar (in a phone-sized window: the import button in the top header). The dialog "Import from Instagram export" opens.
 3. Choose **Select archive files** and pick `instagram-export.zip` (or a `.tar` / `.tar.gz`), or all parts of a split export at once (`instagram-export-part1.zip`, `-part2.zip`, ...), or choose **Select folder** and pick the `instagram-export` folder, or drag the archives or the folder onto the dialog. Several archives or folders picked or dropped together are merged into one import; a post that appears in more than one of them is kept once (the later one wins, with a warning).
 4. The dialog reports "Imported N of M posts" and lists warnings for entries it skipped or repaired (a missing file, an unsupported picture or video, a dropped link); **Show all N warnings** opens the full list. Click **View feed**. An export made with this runbook should import without any warning.

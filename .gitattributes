@@ -1,0 +1,2 @@
+# Shell launchers must keep LF endings so bash can run them on Linux/macOS.
+*.sh text eol=lf

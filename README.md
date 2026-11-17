@@ -63,6 +63,13 @@ Visual Studio C++ build tools are needed only for the native app):
 .\run-app.bat  # the native Windows app (needs Rust; run setup.bat first)
 ```
 
+Linux/macOS (the web stack only; the native app is Windows-only):
+
+```bash
+./setup.sh
+./run.sh
+```
+
 If a Python virtual environment or Conda environment is already active, setup
 installs into that environment and run uses the same interpreter. Otherwise,
 the scripts create and reuse `.venv` in this project. `setup.bat` also runs
@@ -197,7 +204,7 @@ it: the bar says `N posts ready` and waits for **View feed** or **Discard**.
 
 ### The library in %TEMP%\instagram_cache
 
-When the clone runs with its backend (`run.bat` or a portable
+When the clone runs with its backend (`run.bat`, `run.sh` or a portable
 build), every import is saved in a library on the machine that runs the
 backend, and the feed shows the library. The browser still reads the export
 itself; it then uploads the posts and their media files to the backend, which
@@ -731,7 +738,9 @@ checks of the validator in `instagram.md` with the code.
 The Playwright suite starts both FastAPI and Vite automatically, then exercises
 the live API through the frontend proxy using an isolated test database and an
 isolated library folder (`INSTAGRAM_CACHE_DIR` points into the test results,
-never at the real `%TEMP%\instagram_cache`). It uses Microsoft Edge.
+never at the real `%TEMP%\instagram_cache`). It uses Microsoft Edge by default.
+On macOS it uses Playwright's WebKit-based Desktop Safari profile, which is the
+supported automation equivalent for Safari rendering.
 
 `e2e/tests/import.spec.ts`, `video.spec.ts`, `library.spec.ts` and
 `autoview.spec.ts` drive the importer, video playback, the library and auto
@@ -742,6 +751,14 @@ answer requests to instagram.com with a stub, so nothing leaves the machine.
 The fixtures are synthetic and committed; `e2e/fixtures/generate-fixtures.py`
 recreates them (it needs Python with `pillow` and `pillow-heif`, the tests do
 not), and `e2e/fixtures/record-videos.ts` records the clips in Edge.
+
+On a fresh macOS checkout, install the WebKit browser once before running the
+tests:
+
+```bash
+cd e2e
+npm run install:webkit
+```
 
 ## Third-party software
 
@@ -797,8 +814,8 @@ windows-app/README.md     The native app's own documentation
 instagram.md              Runbook: export Instagram posts with a browser MCP client
 port_mapping.json         Default ports copied into every portable build
 secrets.md                Secret-scan audit trail (no secret values)
-setup.py / setup.bat      Dependency setup (Python, Node, and the native app's Rust)
-run.py / run.bat          Combined backend/frontend runner (the web stack)
+setup.py / setup.*        Dependency setup (Python, Node, and on Windows the native app's Rust)
+run.py / run.*            Combined backend/frontend runner (the web stack)
 run-app.bat               Native Windows app runner (cargo run in windows-app/)
 build.py / build.bat      Builds everything: build/dist (web) and windows-app/build/dist
 update-web.bat            Rebuilds windows-app/web/dist from frontend/ (needs Node.js)
